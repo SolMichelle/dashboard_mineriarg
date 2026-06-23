@@ -3,4 +3,4 @@ pandas
 geopandas
 plotly
 pyogrio
-fiona
+

@@ -21,7 +21,7 @@ def load_data():
 @st.cache_data
 def load_geojson():
     # Reemplaza con el nombre exacto de tu archivo GeoJSON optimizado
-    return gpd.read_file("provincias_web.geojson") 
+    return gpd.read_file("provincias_web.geojson", engine="fiona") 
 
 df_total = load_data()
 geo_provincias = load_geojson()

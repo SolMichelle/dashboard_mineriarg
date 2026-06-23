@@ -7,7 +7,7 @@ El proyecto integra procesos automatizados de ETL, análisis geoespacial y un da
 
 ---
 
-## ── Resumen
+##  Resumen
 
 El portal resuelve la dispersión de datos públicos de la actividad minera. Consolida registros de empleo sectorial (abiertos por provincia, año y género), densidades empresariales por rubro y datos demográficos del Censo 2022. 
 
@@ -19,7 +19,7 @@ El portal resuelve la dispersión de datos públicos de la actividad minera. Con
 
 ---
 
-## ── Estructura de la arquitectura
+##  Estructura de la arquitectura
 
 El proyecto sigue un flujo lineal de datos dividido en tres capas principales:
 
@@ -29,7 +29,7 @@ El proyecto sigue un flujo lineal de datos dividido en tres capas principales:
 
 ---
 
-## ── Guía de Usuario y Ejecución 
+##  Guía de Usuario y Ejecución 
 
 Si querés replicar este proyecto o ejecutarlo de forma local en tu computadora, seguí estos pasos:
 
@@ -40,7 +40,7 @@ Asegurate de tener instalado **Python 3.10 o superior** y un gestor de paquetes 
 Abrí tu terminal o consola de comando y ejecuta:
 
 #### Clonar este repositorio
-git clone [https://github.com/tu-usuario/dashboard-mineria.git](https://github.com/tu-usuario/dashboard-mineria.git)
+git clone [https://github.com/SolMichelle/dashboard_mineriarg.git](https://github.com/SolMichelle/dashboard_mineriarg.git)
 
 #### Entrar a la carpeta del proyecto
 cd dashboard-mineria
@@ -58,6 +58,8 @@ streamlit run app.py
 
 Se abrirá automáticamente una pestaña en tu navegador web en la dirección http://localhost:8501 con el panel interactivo totalmente funcional.
 
+---
+
 ── Stack usado 🛠️
 * Lenguaje: Python 3.12
 * Procesamiento de datos: Pandas
@@ -66,7 +68,3 @@ Se abrirá automáticamente una pestaña en tu navegador web en la dirección ht
 * Control de versiones & servidor: GitHub & Streamlit Community Cloud
 * Prototipado inicial: Power BI (Modelado de datos y diseño DAX)
 
-
-```bash
-# Clonar este repositorio
-git clone

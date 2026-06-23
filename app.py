@@ -205,7 +205,7 @@ st.info("""
 
 🏢 Estructura empresarial: se desmitifica que la minería sea solo de megaproyectos, el sector se sostiene sobre más de 236.000 empresas (principalmente PyMEs y contratistas) con un promedio nacional general de 30 empleadxs por firma.
 
-🔍 Contraste de rubros: existe una marcada disparidad. El rubro "Rocas de Aplicación" concentra el mayor volumen con más de 82.000 empresas (promedio de 1 empleadx), mientras que "Metalíferos" y "Combustibles" reflejan estructuras más concentradas pero con el mayor volumen de empleo total y estabilidad laboral.
+🔍 Contraste de rubros: existe una marcada disparidad. El rubro "Rocas de Aplicación" concentra el mayor volumen con más de 82.000 empresas, mientras que "Metalíferos" y "Combustibles" reflejan estructuras más concentradas pero con el mayor volumen de empleo total y estabilidad laboral.
 
 📍 Distribución territorial: la actividad laboral presenta una marcada desigualdad geográfica, concentrándose fuertemente en las provincias del sur, Santa Cruz, y de la región cordillerana, San Juan y NOA, debido a la localización de los yacimientos.
 

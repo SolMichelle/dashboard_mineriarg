@@ -100,29 +100,70 @@ with row1_col2:
                         title="Cantidad de empresas por rubro")
     st.plotly_chart(fig_tree, use_container_width=True)
 
+# -------------------------------------------------------------------------
+# GRÁFICO COMBINADO (Empleados vs Promedio por rubro)
+# -------------------------------------------------------------------------
 st.write("### Análisis de empleadxs por rubro")
-df_rubro = df_filtrado.groupby('rubro').agg(
+
+df_rubro_base = df_filtrado.groupby(['rubro', 'año']).agg(
     total_empleados=('empleados', 'sum'),
-    promedio_por_empresa=('empleados', 'mean')
+    total_empresas=('empresa', 'nunique') # Corregido a nunique para mantener consistencia
+).reset_index()
+
+df_rubro = df_rubro_base.groupby('rubro').agg(
+    total_empleados=('total_empleados', 'sum'),
+    promedio_por_empresa=('total_empleados', lambda x: x.sum() / df_rubro_base.loc[x.index, 'total_empresas'].sum() if df_rubro_base.loc[x.index, 'total_empresas'].sum() > 0 else 0)
 ).reset_index()
 
 fig_combinado = go.Figure()
+
+# Barras (Eje Izquierdo - y1)
 fig_combinado.add_trace(go.Bar(
-    x=df_rubro['rubro'], y=df_rubro['total_empleados'],
-    name='Total empleadxs', yaxis='y1'
+    x=df_rubro['rubro'], 
+    y=df_rubro['total_empleados'],
+    name='Total empleadxs', 
+    yaxis='y1',
+    marker=dict(color='#1f77b4')
 ))
+
+# Línea (Eje Derecho - y2)
 fig_combinado.add_trace(go.Scatter(
-    x=df_rubro['rubro'], y=df_rubro['promedio_por_empresa'],
-    name='Promedio empleadxs por empresa', yaxis='y2', mode='lines+markers',
+    x=df_rubro['rubro'], 
+    y=df_rubro['promedio_por_empresa'],
+    name='Promedio por empresa', 
+    yaxis='y2', 
+    mode='lines+markers',
     line=dict(color='orange', width=3)
 ))
 
 fig_combinado.update_layout(
-    title="Empleados totales vs. Promedio por empresa según rubro",
-    yaxis=dict(title="Cantidad de empleadxs totales"),
-    yaxis2=dict(title="Promedio de empleadxs por empresa", overlaying='y', side='right')
+    title="Empleadxs totales vs. Promedio por empresa según rubro",
+    xaxis=dict(title="Rubros mineros"),
+    yaxis=dict(
+        title=dict(
+            text="Cantidad de empleadxs totales",
+            font=dict(color='#1f77b4')
+        ),
+        tickfont=dict(color='#1f77b4')
+    ),
+    yaxis2=dict(
+        title=dict(
+            text="Promedio de empleadxs por empresa",
+            font=dict(color='orange')
+        ),
+        tickfont=dict(color='orange'),
+        overlaying='y',
+        side='right',
+        anchor='x',
+        position=1
+    ),
+    margin=dict(l=60, r=60, t=50, b=50),
+    legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
 )
-st.plotly_chart(fig_combinado, use_container_width=True)
+
+st.plotly_chart(fig_combinado, width='stretch')
+
+st.markdown("---")
 
 # -------------------------------------------------------------------------
 # 5. MAPA INTERACTIVO 

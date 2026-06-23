@@ -43,7 +43,7 @@ Abrí tu terminal o consola de comando y ejecuta:
 git clone [https://github.com/SolMichelle/dashboard_mineriarg.git](https://github.com/SolMichelle/dashboard_mineriarg.git)
 
 #### Entrar a la carpeta del proyecto
-cd dashboard-mineria
+cd dashboard_mineriarg
 
 #### Instalar las librerías necesarias de forma automática
 pip install -r requirements.txt
@@ -60,7 +60,7 @@ Se abrirá automáticamente una pestaña en tu navegador web en la dirección ht
 
 ---
 
-── Stack usado 🛠️
+### Stack usado 🛠️
 * Lenguaje: Python 3.12
 * Procesamiento de datos: Pandas
 * Visualización dinámica: Plotly Express & Graph Objects

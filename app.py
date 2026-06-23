@@ -201,5 +201,15 @@ st.markdown("---")
 # -------------------------------------------------------------------------
 st.write("## Conclusiones del análisis")
 st.info("""
-Escribe aquí tus conclusiones basándote en los gráficos generados.
+    🛠️ Metodología y desarrollo: el diseño previo en Power BI fue la guía fundamental para estructurar este portal en Streamlit, superando limitaciones de licencias para compartir los resultados y validando la consistencia de las métricas.
+
+🏢 Estructura empresarial: se desmitifica que la minería sea solo de megaproyectos, el sector se sostiene sobre más de 236.000 empresas (principalmente PyMEs y contratistas) con un promedio nacional general de 30 empleadxs por firma.
+
+🔍 Contraste de rubros: existe una marcada disparidad. El rubro "Rocas de Aplicación" concentra el mayor volumen con más de 82.000 empresas (promedio de 1 empleadx), mientras que "Metalíferos" y "Combustibles" reflejan estructuras más concentradas pero con el mayor volumen de empleo total y estabilidad laboral.
+
+📍 Distribución territorial: la actividad laboral presenta una marcada desigualdad geográfica, concentrándose fuertemente en las provincias del sur, Santa Cruz, y de la región cordillerana, San Juan y NOA, debido a la localización de los yacimientos.
+
+📈 Evolución histórica: los picos históricos de empleo ocurrieron en 2009 y 2012. Tras una fuerte crisis general en 2010, solo algunos rubros como "Servicios Mineros" lograron revertir la tendencia y superar desde 2023 sus récords históricos de empleabilidad.
+
+⚖️ Brecha de género: históricamente masculinizado, el sector muestra un crecimiento sostenido de empleo femenino desde 2018, aunque la fuerza laboral de mujeres ronda apenas el 10% general desde 2020. La gran excepción es el Litio, que registra un crecimiento exponencial desde 2021 y lidera la industria con la menor brecha de género.
 """)

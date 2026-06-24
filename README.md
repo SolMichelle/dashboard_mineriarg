@@ -12,20 +12,19 @@ El proyecto integra procesos automatizados de ETL, análisis geoespacial y un da
 El portal resuelve la dispersión de datos públicos de la actividad minera. Consolida registros de empleo sectorial (abiertos por provincia, año y género), densidades empresariales por rubro y datos demográficos del Censo 2022. 
 
 ### Objetivos:
-* **Evolución del empleo:** monitorear el crecimiento de puestos de trabajo directos según el sector minero.
-* **Brecha de género:** analizar la proporción y distribución de género dentro de la fuerza laboral a lo largo de los años.
-* **Análisis demográfico:** cruzar la actividad minera con la superficie, población y densidad de cada provincia.
-* **Visualización geoespacial:** representar la concentración de la actividad en un mapa dinámico utilizando datos del Instituto Geográfico Nacional (IGN).
+* **Evolución del empleo:** monitorear el comportamiento estructural de los puestos de trabajo directos según el rubro minero.
+* **Brecha de género:** analizar la proporción y evolución de la inserción de mujeres dentro de la fuerza laboral a lo largo de las series temporales.
+* **Impacto socio-laboral local:** cruzar la actividad con variables censales para medir qué porcentaje real de la población de cada provincia depende económicamente de la minería.
+* **Visualización geoespacial:** representar la concentración de la fuerza de trabajo en un mapa dinámico utilizando cartografía oficial del Instituto Geográfico Nacional (IGN).
 
 ---
 
-##  Estructura de la arquitectura
+## Estructura de la arquitectura
 
 El proyecto sigue un flujo lineal de datos dividido en tres capas principales:
-
-1. **Capa de ETL:** el script `etl.py` lee los CSVs crudos, normaliza las inconsistencias en los nombres de las provincias, limpia registros duplicados y optimiza la geometría del mapa pesado del IGN (`provincias_web.geojson`) reduciendo su complejidad para la web.
-2. **Capa de inteligencia de negocio:** el archivo `app.py` procesa los datos filtrados, calcula métricas en tiempo real utilizando la lógica de modelos relacionales estrella (estilo Power BI) y genera gráficos dinámicos con **Plotly**.
-3. **Capa de despliegue:** integración continua mediante **GitHub**, servidor web en **Streamlit Cloud**.
+* **Capa de ETL:** el script `etl.py` lee los CSVs crudos, normaliza las inconsistencias en los nombres de las provincias, transforma strings demográficos a tipo numérico entero y calcula promedios mensuales anualizados para neutralizar la duplicación de datos en métricas y mapas. Además, optimiza la geometría del mapa pesado del IGN (`provincias_web.geojson`) reduciendo su complejidad para la web.
+* **Capa de inteligencia de negocio:** el archivo `app.py` procesa los datos filtrados, aplica agregaciones de control por valor máximo (`'max'`) para aislar variables macro (empresas nacionales), calcula en tiempo real métricas de negocio y genera gráficos dinámicos con Plotly (incluyendo el nuevo ranking de impacto local).
+* **Capa de despliegue:** integración continua mediante GitHub, servidor web en Streamlit Cloud.
 
 ---
 
@@ -63,6 +62,7 @@ Se abrirá automáticamente una pestaña en tu navegador web en la dirección ht
 ### Stack usado 🛠️
 * Lenguaje: Python 3.12
 * Procesamiento de datos: Pandas
+* Sistemas de información geográfica (GIS): GeoPandas
 * Visualización dinámica: Plotly Express & Graph Objects
 * Framework del Dashboard: Streamlit
 * Control de versiones & servidor: GitHub & Streamlit Community Cloud

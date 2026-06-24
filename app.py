@@ -263,15 +263,15 @@ st.markdown("---")
 # -------------------------------------------------------------------------
 st.write("## Conclusiones del análisis")
 st.info("""
-🛠️ Metodología y desarrollo: El diseño previo en Power BI fue la guía fundamental para estructurar este portal en Streamlit, superando limitaciones de licencias para compartir los resultados y validando la consistencia de las métricas.
+🛠️ Metodología y desarrollo: el diseño previo en Power BI fue la guía fundamental para estructurar este portal en Streamlit, superando limitaciones de licencias para compartir los resultados y validando la consistencia de las métricas.
 
-🏢 Estructura empresarial: El tejido industrial minero se compone de un número acotado de grandes operadores (alrededor de mil empresas activas en el país), pero su cadena de valor está sostenida principalmente por PyMEs locales y empresas contratistas. Esto se refleja en que el promedio general de la industria ronda los 30 empleadxs por firma, demostrando que el sector tracciona una fuerte red de empleo mediano y familiar en las regiones donde se instala.
+🏢 Estructura empresarial: el tejido industrial minero se compone de un número acotado de grandes operadores (alrededor de mil empresas activas en el país), pero su cadena de valor está sostenida principalmente por PyMEs locales y empresas contratistas. Esto se refleja en que el promedio general de la industria ronda los 30 empleadxs por firma, demostrando que el sector tracciona una fuerte red de empleo mediano y familiar en las regiones donde se instala.
 
-🔍 Contraste de rubros (Datos 2026): Metalíferos lidera el empleo masivo con casi 13.000 puestos. El modelo corporativo de mayor envergadura por empresa se concentra en Combustibles (más de 600 empleadxs/firma) y Litio (220 empleadxs/firma), mientras que Rocas de Aplicación equilibra el tablero aportando más de 5.000 empleos estables con estructuras medianas de casi 17 personas.
+🔍 Contraste de rubros (en 2026): el rubro Metalífero lidera el empleo masivo con casi 13.000 puestos. El modelo corporativo de mayor envergadura por empresa se concentra en Combustibles (más de 600 empleadxs/firma) y Litio (220 empleadxs/firma), mientras que Rocas de Aplicación equilibra el tablero aportando más de 5.000 empleos estables con estructuras medianas de casi 17 personas.
 
-📍 Distribución territorial: La actividad laboral presenta una marcada desigualdad geográfica, concentrándose fuertemente en las provincias del sur, Santa Cruz, y de la región cordillerana, San Juan y NOA, debido a la localización de los yacimientos.
+📍 Distribución territorial: la actividad laboral presenta una marcada desigualdad geográfica, concentrándose fuertemente en las provincias del sur, Santa Cruz, y de la región cordillerana, San Juan y NOA, debido a la localización de los yacimientos.
 
-📈 Evolución histórica: Los picos históricos de empleo ocurrieron en 2009 y 2012. Tras una fuerte crisis general en 2010, el rubro Servicios Mineros (que hoy emplea a más de 8.000 personas) logró revertir la tendencia y superar desde 2023 sus récords históricos de empleabilidad.
+📈 Evolución histórica: los picos históricos de empleo ocurrieron en 2009 y 2012. Tras una fuerte crisis general en 2010, el rubro Servicios Mineros (que hoy emplea a más de 8.000 personas) logró revertir la tendencia y superar desde 2023 sus récords históricos de empleabilidad.
 
-⚖️ Brecha de género: Históricamente masculinizado, el sector muestra un crecimiento sostenido de empleo femenino desde 2018, aunque la fuerza laboral de mujeres ronda apenas el 10% general desde 2020. La gran excepción es el Litio (más de 5.000 empleados), que registra un crecimiento exponencial desde 2021 y lidera la industria con la menor brecha de género.
+⚖️ Brecha de género: históricamente masculinizado, el sector muestra un crecimiento sostenido de empleo femenino desde 2018, aunque la fuerza laboral de mujeres ronda apenas el 10% general desde 2020. La gran excepción es el Litio (más de 5.000 empleados a nivel nacional), registrando un crecimiento exponencial desde 2021 y lidera la industria con la menor brecha de género.
 """)

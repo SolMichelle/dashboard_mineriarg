@@ -30,31 +30,36 @@ def ejecutar_etl():
     mineria_1.rename(columns={'Cantidad': 'empleados', 'provincia_zona': 'provincia'}, inplace=True)
     mineria_1['año'] = mineria_1['año_mes'].astype(str).str[:4].astype(int)
     
-    # Mapeo y colapso de subzonas
+    # Mapeo y colapso de subzonas provinciales antes de anualizar
     reemplazos_zonas = {
         "Mendoza-Zona Este": "Mendoza", 
         "Mendoza-Zona Sur": "Mendoza",
         "Mendoza-Zona Centro": "Mendoza",
         "Tierra del Fuego, Antártida e Islas del Atlántico Sur (1)(3)": "Tierra del Fuego",
-        "Ciudad Autónoma de Buenos Aires": "CABA"
+        "Ciudad Autónoma de Buenos Aires": "CABA",
+        "Río Negro": "Rio Negro",
+        "Neuquén": "Neuquen",
+        "Entre Ríos": "Entre Rios",
+        "Santiago del Estero": "Santiago Del Estero",
+        "Tucumán": "Tucuman"
     }
     mineria_1['provincia'] = mineria_1['provincia'].replace(reemplazos_zonas)
     
-    # Anualizar el empleo calculando el promedio mensual de trabajadores activos en el año
+    # Anualiza el empleo calculando el promedio mensual de trabajadores activos en el año
     df_empleo_anual = mineria_1.groupby(['año', 'provincia', 'rubro', 'genero'])['empleados'].mean().reset_index()
-    # Redondear
+    # Redondea a enteros lógicos
     df_empleo_anual['empleados'] = df_empleo_anual['empleados'].round().astype(int)
 
     # --- B) PROCESAR UNIVERSO EMPRESAS ---
     mineria_2.rename(columns={'Cantidad': 'empresa'}, inplace=True)
     mineria_2['año'] = mineria_2['año_mes'].astype(str).str[:4].astype(int)
     
-    # Anualizar la cantidad de empresas usando el promedio mensual del año (evita inflar x12)
+    # Anualiza la cantidad de empresas usando el promedio mensual del año (evita inflar x12)
     df_empresas_anual = mineria_2.groupby(['año', 'rubro'])['empresa'].mean().reset_index()
     df_empresas_anual['empresa'] = df_empresas_anual['empresa'].round().astype(int)
 
-    # --- C) COMBINACIÓN CONTROLADA ---
-    # Unir manteniendo la granularidad micro del empleo como base principal
+    # --- C) COMBINACIÓN CONTROLADA DE MINERÍA ---
+    # Une manteniendo la granularidad micro del empleo como base principal
     df_mineria = pd.merge(
         df_empleo_anual, 
         df_empresas_anual, 
@@ -78,13 +83,16 @@ def ejecutar_etl():
     
     # Mapeo de inconsistencias de nombres comunes entre el Censo y el Dataset de Empleo
     reemplazos_poblacion = {
-        "Neuquen": "Neuquén",
-        "Cordoba": "Córdoba",
-        "Entre Rios": "Entre Ríos",
-        "Tucuman": "Tucumán",
+        "Mendoza-Zona Este": "Mendoza", 
+        "Mendoza-Zona Sur": "Mendoza",
+        "Mendoza-Zona Centro": "Mendoza",
+        "Tierra del Fuego, Antártida e Islas del Atlántico Sur (1)(3)": "Tierra del Fuego",
         "Ciudad Autónoma de Buenos Aires": "CABA",
+        "Río Negro": "Rio Negro",
+        "Neuquén": "Neuquen",
+        "Entre Ríos": "Entre Rios",
         "Santiago del Estero": "Santiago Del Estero",
-        "Tierra del Fuego, Antártida e Islas del Atlántico Sur (1)(3)": "Tierra del Fuego"
+        "Tucumán": "Tucuman"
     }
     df_poblacion['provincia'] = df_poblacion['provincia'].replace(reemplazos_poblacion)
 
@@ -124,10 +132,10 @@ def ejecutar_etl():
     if os.path.exists("provincia.geojson"):
         geo_original = gpd.read_file("provincia.geojson")
         
-        # Reducir peso para la web
+        # Reducimos peso coordinando con la tolerancia web
         geo_original["geometry"] = geo_original["geometry"].simplify(0.01, preserve_topology=True)
         
-        # Normalizar la propiedad del nombre dentro del GeoJSON para que coincida con la app de Streamlit
+        # Normalizamos la propiedad del nombre dentro del GeoJSON para que coincida con la app de Streamlit
         if 'nam' in geo_original.columns:
             geo_original['nam'] = geo_original['nam'].str.strip()
             

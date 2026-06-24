@@ -23,11 +23,11 @@ def load_geojson():
     # Reemplaza con el archivo GeoJSON optimizado
     return gpd.read_file("provincias_web.geojson") 
 
-df_total = load_data()
+df_total = load_data() 
 geo_provincias = load_geojson()
 
 # -------------------------------------------------------------------------
-# 2. ETIQUETAS SEGMENTADORAS (Filtros en la barra lateral)
+# 2. ETIQUETAS SEGMENTADORAS 
 # -------------------------------------------------------------------------
 st.sidebar.header("Filtros del panel")
 
@@ -53,7 +53,7 @@ df_filtrado = df_total[
 col1, col2, col3 = st.columns(3)
 
 with col1:
-    # CORREGIDO PARA EVITAR MULTIPLICACIÓN:
+    # CORREGIDO PARA EVITAR MULTIPLICACIÓN
     df_empresas_unicas = df_filtrado.drop_duplicates(subset=['año', 'rubro'])
     cant_empresas = df_empresas_unicas['empresa'].sum()
     
@@ -85,8 +85,20 @@ row1_col1, row1_col2 = st.columns(2)
 with row1_col1:
     st.write("### Evolución de empleo por género")
     df_genero = df_filtrado.groupby(['año', 'genero'])['empleados'].sum().reset_index()
-    fig_area = px.area(df_genero, x="año", y="empleados", color="genero", 
-                    groupnorm='percent', title="Proporción de género")
+    colores_genero = {
+        "Femenino": "#ff69b4",     
+        "Masculino": "#4682b4"    
+    }
+    
+    fig_area = px.area(
+        df_genero, 
+        x="año", 
+        y="empleados", 
+        color="genero", 
+        groupnorm='percent', 
+        title="Proporción de género",
+        color_discrete_map=colores_genero
+    )
     st.plotly_chart(fig_area, use_container_width=True)
 
 with row1_col2:
@@ -105,15 +117,22 @@ with row1_col2:
 # -------------------------------------------------------------------------
 st.write("### Análisis de empleadxs por rubro")
 
+# 1. Agrupar primero por Rubro y Año para respetar la naturaleza macro de las empresas
 df_rubro_base = df_filtrado.groupby(['rubro', 'año']).agg(
     total_empleados=('empleados', 'sum'),
-    total_empresas=('empresa', 'nunique') # Corregido a nunique para mantener consistencia
+    total_empresas=('empresa', 'max') # 'max' toma el valor nacional real del año sin duplicar
 ).reset_index()
 
+# 2. Consolida los totales históricos/filtrados por Rubro
 df_rubro = df_rubro_base.groupby('rubro').agg(
     total_empleados=('total_empleados', 'sum'),
-    promedio_por_empresa=('total_empleados', lambda x: x.sum() / df_rubro_base.loc[x.index, 'total_empresas'].sum() if df_rubro_base.loc[x.index, 'total_empresas'].sum() > 0 else 0)
+    total_empresas=('total_empresas', 'sum')
 ).reset_index()
+
+# 3. Cálculo directo y seguro del promedio por empresa
+df_rubro['promedio_por_empresa'] = df_rubro.apply(
+    lambda r: r['total_empleados'] / r['total_empresas'] if r['total_empresas'] > 0 else 0, axis=1
+)
 
 fig_combinado = go.Figure()
 
@@ -170,10 +189,9 @@ st.markdown("---")
 # -------------------------------------------------------------------------
 st.write("### Distribución geográfica de la actividad minera")
 
-# Agrupación de datos para el mapa por provincia
+# CORREGIDO: solo empleo por provincia
 df_mapa = df_filtrado.groupby('provincia').agg(
-    total_empleados=('empleados', 'sum'),
-    total_empresas=('empresa', 'sum')
+    total_empleados=('empleados', 'sum')
 ).reset_index()
 
 # mapa con Plotly Express
@@ -197,19 +215,63 @@ st.plotly_chart(fig_mapa, use_container_width=True)
 st.markdown("---")
 
 # -------------------------------------------------------------------------
+# 5. MAPA INTERACTIVO Y PROPORCIÓN LOCAL
+# -------------------------------------------------------------------------
+st.write("### Impacto socio-económico en las provincias")
+st.markdown("""
+*Este gráfico analiza la intensidad de la actividad minera en relación con la población total de cada provincia (considerando datos del Censo 2022). 
+Permite visualizar un ranking de qué provincias dependen más críticamente del empleo minero para su estructura socioeconómica local, independientemente de su tamaño absoluto.*
+""")
+
+# Agrupación de datos
+df_impacto = df_filtrado.groupby(['provincia', 'Población total']).agg(
+    total_empleados=('empleados', 'sum')
+).reset_index()
+
+# Calcular porcentaje local de empleo minero
+df_impacto['porcentaje_local'] = (df_impacto['total_empleados'] / df_impacto['Población total']) * 100
+
+# Ordenar de menor a mayor 
+df_ranking = df_impacto.sort_values(by='porcentaje_local', ascending=True)
+
+# Crear el gráfico
+fig_ranking = px.bar(
+    df_ranking,
+    x='porcentaje_local',
+    y='provincia',
+    orientation='h',
+    title="Porcentaje de la población provincial dedicada al empleo minero",
+    labels={'porcentaje_local': '% de la población local', 'provincia': 'Provincia'},
+    color='porcentaje_local',
+    color_continuous_scale="Cividis"  
+)
+
+# Ajustes de diseño 
+fig_ranking.update_layout(
+    showlegend=False, 
+    coloraxis_showscale=True, # barra de intensidad de color
+    coloraxis_colorbar=dict(title="%"),
+    margin=dict(l=50, r=20, t=40, b=40),
+    height=500
+)
+
+st.plotly_chart(fig_ranking, use_container_width=True)
+
+st.markdown("---")
+# -------------------------------------------------------------------------
 # 6. APARTADO PARA CONCLUSIONES
 # -------------------------------------------------------------------------
 st.write("## Conclusiones del análisis")
 st.info("""
-    🛠️ Metodología y desarrollo: el diseño previo en Power BI fue la guía fundamental para estructurar este portal en Streamlit, superando limitaciones de licencias para compartir los resultados y validando la consistencia de las métricas.
+🛠️ Metodología y desarrollo: El diseño previo en Power BI fue la guía fundamental para estructurar este portal en Streamlit, superando limitaciones de licencias para compartir los resultados y validando la consistencia de las métricas.
 
-🏢 Estructura empresarial: se desmitifica que la minería sea solo de megaproyectos, el sector se sostiene sobre más de 236.000 empresas (principalmente PyMEs y contratistas) con un promedio nacional general de 30 empleadxs por firma.
+🏢 Estructura empresarial: El tejido industrial minero se compone de un número acotado de grandes operadores (alrededor de mil empresas activas en el país), pero su cadena de valor está sostenida principalmente por PyMEs locales y empresas contratistas. Esto se refleja en que el promedio general de la industria ronda los 30 empleadxs por firma, demostrando que el sector tracciona una fuerte red de empleo mediano y familiar en las regiones donde se instala.
 
-🔍 Contraste de rubros: existe una marcada disparidad. El rubro "Rocas de Aplicación" concentra el mayor volumen con más de 82.000 empresas, mientras que "Metalíferos" y "Combustibles" reflejan estructuras más concentradas pero con el mayor volumen de empleo total y estabilidad laboral.
+🔍 Contraste de rubros (Datos 2026): Metalíferos lidera el empleo masivo con casi 13.000 puestos. El modelo corporativo de mayor envergadura por empresa se concentra en Combustibles (más de 600 empleadxs/firma) y Litio (220 empleadxs/firma), mientras que Rocas de Aplicación equilibra el tablero aportando más de 5.000 empleos estables con estructuras medianas de casi 17 personas.
 
-📍 Distribución territorial: la actividad laboral presenta una marcada desigualdad geográfica, concentrándose fuertemente en las provincias del sur, Santa Cruz, y de la región cordillerana, San Juan y NOA, debido a la localización de los yacimientos.
+📍 Distribución territorial: La actividad laboral presenta una marcada desigualdad geográfica, concentrándose fuertemente en las provincias del sur, Santa Cruz, y de la región cordillerana, San Juan y NOA, debido a la localización de los yacimientos.
 
-📈 Evolución histórica: los picos históricos de empleo ocurrieron en 2009 y 2012. Tras una fuerte crisis general en 2010, solo algunos rubros como "Servicios Mineros" lograron revertir la tendencia y superar desde 2023 sus récords históricos de empleabilidad.
+📈 Evolución histórica: Los picos históricos de empleo ocurrieron en 2009 y 2012. Tras una fuerte crisis general en 2010, el rubro Servicios Mineros (que hoy emplea a más de 8.000 personas) logró revertir la tendencia y superar desde 2023 sus récords históricos de empleabilidad.
 
-⚖️ Brecha de género: históricamente masculinizado, el sector muestra un crecimiento sostenido de empleo femenino desde 2018, aunque la fuerza laboral de mujeres ronda apenas el 10% general desde 2020. La gran excepción es el Litio, que registra un crecimiento exponencial desde 2021 y lidera la industria con la menor brecha de género.
+⚖️ Brecha de género: Históricamente masculinizado, el sector muestra un crecimiento sostenido de empleo femenino desde 2018, aunque la fuerza laboral de mujeres ronda apenas el 10% general desde 2020. La gran excepción es el Litio (más de 5.000 empleados), que registra un crecimiento exponencial desde 2021 y lidera la industria con la menor brecha de género.
 """)
